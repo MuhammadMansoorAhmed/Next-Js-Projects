@@ -49,3 +49,12 @@ const page = async (props: SnippetsShowPageProps) => {
 };
 
 export default page;
+export async function generateStaticParams() {
+  const snippets = await db.secondProject.findMany();
+
+  return snippets.map((snippet) => {
+    return {
+      id: snippet.id.toString(),
+    };
+  });
+}

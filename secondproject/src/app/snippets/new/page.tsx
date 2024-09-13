@@ -1,27 +1,14 @@
-import { redirect } from "next/navigation";
-import { db } from "@/db/index";
+"use client";
+import * as actions from "@/actions";
+import { useFormState } from "react-dom";
 
 const SnippetsCreatePage = () => {
-  const createSnippet = async (formData: FormData) => {
-    //server action
-    "use server";
-    //getdata from the object
-    const title = formData.get("title") as string;
-    const code = formData.get("code") as string;
-    //store data to the DB
-
-    const newSnipper = await db.secondProject.create({
-      data: {
-        title,
-        code,
-      },
-    });
-    console.log(newSnipper);
-    redirect("/");
-  };
+  const [formState, action] = useFormState(actions.createSnippet, {
+    message: "",
+  });
 
   return (
-    <form className="" action={createSnippet}>
+    <form className="" action={action}>
       <h3 className="my-4 font-bold">Create a Snippet</h3>
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
@@ -47,6 +34,9 @@ const SnippetsCreatePage = () => {
             placeholder="Code"
           />
         </div>
+        {formState.message ? (
+          <div className="flex">{formState.message}</div>
+        ) : null}
         <button
           type="submit"
           className="rounded p-2 bg-blue-500 text-white     "
